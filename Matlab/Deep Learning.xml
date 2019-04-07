@@ -1,0 +1,255 @@
+
+Import an image
+img1 = imread('file01.jpg')
+img2 = imread('file02.jpg')
+img3 = imread('file03.jpg')
+
+View image
+imshow(img1)
+imshow(img2)
+imshow(img3)
+
+%Classify images
+
+Load pretrained network
+deepnet = alexnet
+
+img1 = imread('file01.jpg');
+imshow(img1)
+
+Classify an image
+pred1 = deepnet.classify(img1)
+
+%Examine Network Layers
+
+This code imports AlexNet.
+deepnet = alexnet;
+
+Save layers
+ly = deepnet.Layers
+
+Extract first layer
+inlayer = ly(1)
+
+Extract input size
+insz = inlayer.InputSize
+
+Extract last layer
+outlayer = ly(end)
+
+Extract class names
+categorynames = outlayer.Classes
+
+%Investigate Predictions
+
+This code loads in an image and imports AlexNet.
+img = imread('file01.jpg');
+imshow(img)
+net = alexnet;
+categorynames = net.Layers(end).ClassNames;
+
+Classify an image
+[pred , scores] = net.classify(img)
+
+Display scores 
+bar(scores)
+
+Threshold scores
+highscores = scores > 0.01
+
+
+Display thresholded scores
+bar(scores(highscores))
+
+Add tick labels
+xticklabels(categorynames(highscores))
+
+%Create a Datastore
+
+
+This code displays the images in the current folder and imports AlexNet.
+ls *.jpg
+net = alexnet;
+
+
+Create datastore
+imds = imageDatastore('file*.jpg')
+
+Extract file names
+fname = imds.Files
+
+Read an image
+img = readimage(imds,7)
+
+Classify images
+preds = net.classify(imds)
+
+This code imports and displays the images in file02.jpg and file03.jpg.
+img2 = imread('file02.jpg');
+imshow(img2)
+img3 = imread('file03.jpg');
+imshow(img3)
+
+Classify further images
+pred2 = deepnet.classify(img2)
+pred3 = deepnet.classify(img3)
+
+%Process Images for Classification
+
+This code imports and displays the image from the file file01.jpg.
+img = imread('file01.jpg');
+imshow(img)
+
+View image size
+sz = size(img)
+
+Load network and view input size
+net = alexnet
+ly = net.Layers(1)
+insz = ly.InputSize
+
+Resize image and display
+img = imresize(img,[227 227]);
+imshow(img)
+
+%Resize Images in a Datastore
+
+This code displays the images in the current folder and imports AlexNet.
+ls *.jpg
+net = alexnet
+
+Create datastore
+imds = imageDatastore('*.jpg')
+
+Create augmentedImageDatastore
+auds = augmentedImageDatastore([227 227] ,imds)
+
+Classify datastore
+ preds = net.classify(auds)
+
+%Preprocess Color Using a Datastore
+
+This code displays the images in the current folder and imports AlexNet.
+ls *.jpg
+net = alexnet
+This code creates an image datastore of these images.
+imds = imageDatastore('file*.jpg')
+
+Display images in imds
+montage(imds)
+
+Create augmentedImageDatastore
+auds = augmentedImageDatastore([227 227], imds , 'ColorPreprocessing' , 'gray2rgb')
+
+Classify datastore
+preds = net.classify(auds)
+
+Create a Datastore Using Subfolders
+Instructions are in the task pane to the left. Complete and submit each task one at a time.
+
+This code imports AlexNet
+net = alexnet;
+
+Create datastore
+flwrds = imageDatastore('Flowers' , 'IncludeSubfolders',true)
+
+Classify images
+preds = net.classify(flwrds)
+
+Label Images in a Datastore
+Instructions are in the task pane to the left. Complete and submit each task one at a time.
+
+This code creates a datastore of 960 flower images.
+load pathToImages
+flwrds = imageDatastore(pathToImages,'IncludeSubfolders',true);
+flowernames = flwrds.Labels
+
+Create datastore with labels
+flwrds = imageDatastore(pathToImages,'IncludeSubfolders',true,'LabelSource' , 'foldernames');
+
+Extract new labels
+flowernames = flwrds.Labels
+
+Split Data for Training and Testing
+Instructions are in the task pane to the left. Complete and submit each task one at a time.
+
+This code creates a datastore of 960 flower images.
+load pathToImages
+flwrds = imageDatastore(pathToImages,'IncludeSubfolders',true,'LabelSource','foldernames')
+
+Split datastore
+[flwrTrain,flwrTest] = splitEachLabel(flwrds,0.6)
+
+Split datastore randomly
+[flwrTrain,flwrTest] = splitEachLabel(flwrds,0.8,'randomized')
+
+Split datastore by number of images
+[flwrTrain,flwrTest] = splitEachLabel(flwrds,50)
+
+Modify Network Layers
+Instructions are in the task pane to the left. Complete and submit each task one at a time.
+
+This code imports AlexNet and extracts its layers.
+anet = alexnet;
+layers = anet.Layers
+
+Create new layer
+fc = fullyConnectedLayer(12)
+
+Replace 23rd layer
+layers(23) = fc
+
+Replace last layer
+layers(end) = classificationLayer
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Get training images
+
+flower_ds = imageDatastore('Flowers','IncludeSubfolders',true,'LabelSource','foldernames');
+[trainImgs,testImgs] = splitEachLabel(flower_ds,0.6);
+numClasses = numel(categories(flower_ds.Labels));
+ 
+Create a network by modifying AlexNet
+
+net = alexnet;
+layers = net.Layers;
+layers(end-2) = fullyConnectedLayer(numClasses);
+layers(end) = classificationLayer;
+ 
+Set training algorithm options
+
+options = trainingOptions('sgdm','InitialLearnRate', 0.001);
+ 
+Perform training
+
+[flowernet,info] = trainNetwork(trainImgs, layers, options);
+ 
+Use trained network to classify test images
+
+testpreds = classify(flowernet,testImgs);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Set Training Options
+Instructions are in the task pane to the left. Complete and submit each task one at a time.
+
+Set default options
+opts = trainingOptions('sgdm')
+
+Set initial learning rate
+opts = trainingOptions('sgdm','InitialLearnRate',0.001)
+
+%Evaluate Performance
+
+This code loads the training information of flowernet.
+load pathToImages
+load trainedFlowerNetwork flowernet info
+
+Plot training loss
+plot(info.TrainingLoss)
+
+This code creates a datastore of the flower images.
+dsflowers = imageDatastore(pathToImages,'IncludeSubfolders',true,'LabelSource','foldernames');
+[trainImgs,testImgs] = splitEachLabel(dsflowers,0.98);
+
+Classify images
+flwrPreds = flowernet.classify(testImgs)
+
