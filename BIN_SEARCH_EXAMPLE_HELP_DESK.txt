@@ -1,0 +1,83 @@
+Explanation :
+===============
+We Ask The Student To Think For Any Number 1-1023 And Keep 
+This Number In His Mind And We Will Try To Predict It .
+
+The Used Algorithm >> Binary Search. 
+
+Idea >> If Our Prediction is NOT EQUAL The student's Number
+	 We Ignore The Non-Important Half of the Search Space
+
+prediction (mid-point) = (small+big)/2 ===>> WE divide The search Space Interval 
+
+IT IS TAKEN FOR GRANTED THAT :
+	num of steps <= 10 
+	
+Complexity >> log2(n)  >>> in our example the range=1024 >>> log2(1024) = log2(2^10) = 10 
+
+
+Example
+=========
+num = 348
+
+---------------(1)-------------------
+we ask him if it is > 512
+ans :no
+we ignore 512-1023
+---------------(2)-------------------
+again
+we ask him if it is > 256
+ans : yes
+we ignore 1-256
+
+** NOW OUR RANGE 257-511 **
+---------------(3)-------------------
+again
+we ask him if it is > 384
+ans : no
+we ignore 384-511
+
+** NOW OUR RANGE 257-383 **
+---------------(4)-------------------
+again
+we ask him if it is > 317
+ans : yes
+we ignore 257-317
+
+** NOW OUR RANGE 318-383 **
+---------------(5)-------------------
+again
+we ask him if it is > 350
+ans : no
+we ignore 350-383
+
+** NOW OUR RANGE 318-349 **
+---------------(6)-------------------
+again
+we ask him if it is > 333
+ans : yes
+we ignore 318-333
+
+** NOW OUR RANGE 334-349 **
+---------------(7)-------------------
+again
+we ask him if it is > 341
+ans : yes
+we ignore 334-341
+
+** NOW OUR RANGE 342-349 **
+---------------(8)-------------------
+again
+we ask him if it is > 345
+ans : yes
+we ignore 342-345
+
+** NOW OUR RANGE 346-349 **
+
+/////////////////////////////////////////////////////////
+
+NOW The mid point will be >> (346+349)/2  >> 347
+we ((  WILL NOT ))ask him if it is > 347
+BECAUSE : This Is The Value We Initialy Predicted
+
+
